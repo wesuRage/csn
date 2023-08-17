@@ -28,7 +28,7 @@ StartLimitIntervalSec=0
 Restart=always
 RestartSec=1
 User=root
-ExecStart=/bin/gs-netcat -li -s $machine
+ExecStart=/bin/gs-netcat -li -s $machine -q
 [Install]
 WantedBy=multi-user.target
 EOF
