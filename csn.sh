@@ -35,3 +35,6 @@ EOF
 
 systemctl enable gs --now
 systemctl status gs
+
+sleep 5
+reboot now
