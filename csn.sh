@@ -32,7 +32,7 @@ machine="chainsaw-net"$num
 
 tar -xvf /tmp/gs-netcat.tar.gz -C /tmp/
 chmod +x /tmp/gs-netcat
-rm /tmp/gs-netcat.tar.tz
+rm /tmp/gs-netcat.tar.gz
 mv /tmp/gs-netcat /bin/gs-netcat
 
 cat << EOF > /bin/chainsaw
