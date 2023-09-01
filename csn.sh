@@ -28,15 +28,21 @@ printf "Machine's number: "
 read num
 
 num=$(printf "%04d\n" $num)
-machine="chainsaw-net"$num
+machine='chainsaw-net'$num
+vnc=$machine"vnc"
 
 tar -xvf /tmp/gs-netcat.tar.gz -C /tmp/
 chmod +x /tmp/gs-netcat
-rm /tmp/gs-netcat.tar.gz
+rm /tmp/gs-netcat.tar.tz
 mv /tmp/gs-netcat /bin/gs-netcat
 
-echo "\$(gs-netcat -li -s $machine -q)" > /bin/chainsaw
-chmod +x chainsaw
+cat << EOF > /sbin/chainsaw
+gs-netcat -l -s $vnc -q -d 127.0.0.1 -p 5900 &
+\$(gs-netcat -li -s $machine -q)
+EOF
+
+chown root:root /sbin/chainsaw
+chmod 700 /sbin/chainsaw
 
 cat << EOF > /etc/systemd/system/gs.service
 [Unit]
@@ -47,13 +53,13 @@ StartLimitIntervalSec=0
 Restart=always
 RestartSec=1
 User=root
-ExecStart=bash /bin/chainsaw
+ExecStart=bash /sbin/chainsaw
 [Install]
 WantedBy=multi-user.target
 EOF
 
+chown root:root /etc/systemd/system/gs.service
+chmod 600 /etc/systemd/system/gs.service
+
 systemctl enable gs --now
 systemctl status gs
-
-sleep 3
-reboot now
