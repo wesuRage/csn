@@ -12,7 +12,7 @@ csn [-c <target>] [-C <target> <command>] [-P <target>] [-b <new_secret>] [-v <t
 
   -P         Checks machine(s) connection - e.g.:
                csn -P 4
-               csn -P 1-8 -f
+               csn -P 1-8
 
   -v         Vnc viewer - e.g.:
                csn -v 6
