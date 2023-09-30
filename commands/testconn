@@ -2,46 +2,33 @@ source $CSN_HOME/lib/libcontest
 source $CSN_HOME/csn.conf
 
 testconn() {
-    case $1 in
-        *"-"*)
-            readarray -d - -t split <<< $1
-            start=${split[0]}
-            end=${split[1]}+1
+	case $1 in
+		*"-"*)
+			readarray -d - -t split <<< $1
+			start=${split[0]}
+			end=${split[1]}+1
 
-			if [ ! "$2" == "-f" ]; then
-				echo "Slow check. High accuracy"
-	            for (( n=$start; n < $end; n++ )) {
+			for (( n=$start; n < $end; n++ )) {
+				{
 					num=$(printf "%04d\n" $n)
 
 					libcontest $BASE_SECRET$num
 
-            	    [ $state -eq 0 ] && echo -e "$n \033[0;32m[UP]\033[0m" || echo -e "$n \033[0;31m[DOWN]\033[0m"
-				}
-			else
-				echo "Fast check. Low accuracy"
-				for (( n=$start; n < $end; n++ )) {
-					{
-						num=$(printf "%04d\n" $n)
+					[ $state -eq 0 ] && echo "$n \033[0;32m[UP]\033[0m\r\n" >> $CSN_HOME/.tmp || echo "$n \033[0;31m[DOWN]\033[0m\r\n" >> $CSN_HOME/.tmp
+				} &
+			}
+			wait
 
-						libcontest $BASE_SECRET$num
+			output=$(sort -n $CSN_HOME/.tmp)
+			echo -e $output | sed -e 's/^[[:space:]]*//; $d'
+			rm $CSN_HOME/.tmp
+		;;
 
-						[ $state -eq 0 ] && echo "$n \033[0;32m[UP]\033[0m\r\n" >> $CSN_HOME/.tmp || echo "$n \033[0;31m[DOWN]\033[0m\r\n" >> $CSN_HOME/.tmp
-					} &
-				}
-				wait
-
-				output=$(sort -n $CSN_HOME/.tmp)
-				echo -e $output | sed -e 's/^[[:space:]]*//; $d'
-				rm $CSN_HOME/.tmp
-
-			fi
-			;;
-
-        *)
+		*)
 			num=$(printf "%04d\n" $1)
 			libcontest $BASE_SECRET$num
 
-			[ $state -eq 0 ] && echo -e "$1 \033[0;32m[UP]\033[0m" || echo -e "$n \033[0;31m[DOWN]\033[0m"
+			[ $state -eq 0 ] && echo -e "$1 \033[0;32m[UP]\033[0m" || echo -e "$1 \033[0;31m[DOWN]\033[0m"
 			;;
 	esac
 }
