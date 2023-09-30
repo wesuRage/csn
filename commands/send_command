@@ -1,0 +1,32 @@
+source $CSN_HOME/csn.conf
+
+send_command() {
+	case $1 in
+		*"-"*)
+			readarray -d - -t split <<< $1
+			start=${split[0]}
+			end=${split[1]}+1
+
+			if [ "$2" == "-f" ]; then			
+				for (( n=$start; n < $end; n++ )) {
+					{
+						num=$(printf "%04d\n" $n)
+
+						echo "${@:3}; exit 2>&1" | gs-netcat -i -s $BASE_SECRET$num -q | sed '1d; $d'
+					} &
+				}
+			else
+				for (( n=$start; n < $end; n++ )) {
+					num=$(printf "%04d\n" $n)
+
+ 					echo "${@:2}; exit 2>&1" | gs-netcat -i -s $BASE_SECRET$num -q | sed '1d; $d'
+				}
+			fi
+			;;
+
+        *)
+			num=$(printf "%04d\n" $1)
+			echo "${@:2}; exit 2>&1" | gs-netcat -i -s $BASE_SECRET$num -q | sed '1d; $d'
+			;;
+	esac
+}

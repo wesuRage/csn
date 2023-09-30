@@ -1,0 +1,11 @@
+source $CSN_HOME/csn.conf
+
+vnc(){
+	gs-netcat -s $1 -p $2 &
+	pid=$!
+
+	sleep 2
+
+	vncviewer 127.0.0.1:$2
+	kill $pid
+}

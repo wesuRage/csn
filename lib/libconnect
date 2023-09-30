@@ -1,0 +1,9 @@
+source $CSN_HOME/lib/libcontest
+
+libconnect(){
+	libcontest $1
+
+	[ $state -eq 1 ] && echo "Connection down or nonexistent" && exit 1 || \
+
+	gs-netcat -i -s $1 -q
+}

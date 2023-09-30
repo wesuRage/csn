@@ -1,0 +1,55 @@
+#!/bin/bash
+
+source $CSN_HOME/csn.conf
+source $CSN_HOME/lib/libconnect
+source $CSN_HOME/commands/testconn
+source $CSN_HOME/commands/send_command
+source $CSN_HOME/commands/change_secret
+source $CSN_HOME/commands/vnc
+
+if [ $# -eq 0 ]; then
+	echo "No arguments provided. See csn -h"
+	exit 1
+fi
+
+while getopts ":h :c :C :P :v :b" opt; do
+	case $opt in
+		h)
+			cat $CSN_HOME/help
+			;;
+
+		c)
+			[ -z $2 ] && echo "Target needed. See csn -h" && exit 1 || \
+
+			num=$(printf "%04d\n" $2)
+			libconnect $BASE_SECRET$num
+			;;
+
+		C)
+			[ -z $2 ] && echo "Target needed. See csn -h" && exit 1 || \
+			[ -z $3 ] && echo "Command needed. See csn -h" && exit 1 || \
+
+			send_command $2 ${@:3}
+			;;
+
+		P)
+			[ -z $2 ] && echo "Target needed. See csn -h" && exit 1 || \
+
+			testconn $2 $3
+			;;
+
+		b)
+			change_secret $2
+			;;
+
+		v)
+			[ -z $2 ] && echo "Target needed. See csn -h" && exit 1 || \
+ 
+			num=$(printf "%04d\n" $2)
+ 			vnc $BASE_SECRET$num"vnc" $VNC_PORT
+			;;
+
+		*)
+			echo "Invalid argument. See csn -h"
+	esac
+done
