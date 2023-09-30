@@ -35,7 +35,7 @@ while getopts ":h :c :C :P :v :b" opt; do
 		P)
 			[ -z $2 ] && echo "Target needed. See csn -h" && exit 1 || \
 
-			testconn $2 $3
+			testconn $2
 			;;
 
 		b)
