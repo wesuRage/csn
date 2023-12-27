@@ -9,7 +9,7 @@ ufw disable
 iptables -F
 
 AMD64="https://github.com/hackerschoice/binary/raw/main/gsocket/bin/gs-netcat_x86_64-alpine.tar.gz"
-wget $AMD64 -O /tmp/gs-netcat.tar.gz;;
+wget $AMD64 -O /tmp/gs-netcat.tar.gz
 
 printf "Machine's number: "
 read num
